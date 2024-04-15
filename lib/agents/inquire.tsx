@@ -8,12 +8,17 @@ export async function inquire(
   uiStream: ReturnType<typeof createStreamableUI>,
   messages: ExperimentalMessage[]
 ) {
-  console.log(
+  console.error(
     '----------- process.env.OPENAI_API_BASE: ',
     process.env.OPENAI_API_BASE,
     ' -----------'
   )
-  console.log(
+  console.error(
+    '----------- process.env.OPENAI_API_BASE: ',
+    process.env.OPENAI_API_BASE,
+    ' -----------'
+  )
+  console.error(
     '----------- process.env.OPENAI_API_KEY: ',
     process.env.OPENAI_API_KEY,
     ' -----------'
