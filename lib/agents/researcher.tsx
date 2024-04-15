@@ -7,7 +7,7 @@ import {
 } from 'ai'
 import { searchSchema } from '@/lib/schema/search'
 import { Section } from '@/components/section'
-import { OpenAI } from 'ai/openai'
+import { OpenAI } from '@ai-sdk/openai'
 import { ToolBadge } from '@/components/tool-badge'
 import { SearchSkeleton } from '@/components/search-skeleton'
 import { SearchResults } from '@/components/search-results'
@@ -165,7 +165,8 @@ async function tavilySearch(
   searchDepth: 'basic' | 'advanced' = 'basic'
 ): Promise<any> {
   const apiKey = process.env.TAVILY_API_KEY
-  const response = await fetch('https://api.tavily.com/search', {
+  const apiBase = process.env.TAVILY_API_BASE || 'https://api.tavily.com/search'
+  const response = await fetch(apiBase, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
