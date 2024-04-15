@@ -21,12 +21,12 @@ export async function researcher(
   streamText: ReturnType<typeof createStreamableValue<string>>,
   messages: ExperimentalMessage[]
 ) {
-  console.error(
+  console.log(
     '----------- process.env.OPENAI_API_BASE: ',
     process.env.OPENAI_API_BASE,
     ' -----------'
   )
-  console.error(
+  console.log(
     '----------- process.env.OPENAI_API_KEY: ',
     process.env.OPENAI_API_KEY,
     ' -----------'
@@ -176,18 +176,18 @@ async function tavilySearch(
 ): Promise<any> {
   const apiKey = process.env.TAVILY_API_KEY
   const apiBase = process.env.TAVILY_API_BASE || 'https://api.tavily.com/search'
-  console.error(
+  console.log(
     '----------- process.env.TAVILY_API_KEY: ',
     process.env.TAVILY_API_KEY,
     ' -----------'
   )
-  console.error(
+  console.log(
     '----------- process.env.TAVILY_API_BASE: ',
     process.env.TAVILY_API_BASE,
     ' -----------'
   )
-  console.error('----------- tavily_fetch_apiBase: ', apiBase, ' -----------')
-  console.error(
+  console.log('----------- tavily_fetch_apiBase: ', apiBase, ' -----------')
+  console.log(
     '----------- tavily_fetch_response_body: ',
     {
       api_key: apiKey,
@@ -215,7 +215,7 @@ async function tavilySearch(
   })
 
   if (!response.ok) {
-    console.error('----------- !response.ok: ', response, ' -----------')
+    console.log('----------- !response.ok: ', response, ' -----------')
     throw new Error(`Error: ${response.status}`)
   }
 
