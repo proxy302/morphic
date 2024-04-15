@@ -21,6 +21,16 @@ export async function researcher(
   streamText: ReturnType<typeof createStreamableValue<string>>,
   messages: ExperimentalMessage[]
 ) {
+  console.log(
+    '----------- process.env.OPENAI_API_BASE: ',
+    process.env.OPENAI_API_BASE,
+    ' -----------'
+  )
+  console.log(
+    '----------- process.env.OPENAI_API_KEY: ',
+    process.env.OPENAI_API_KEY,
+    ' -----------'
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: process.env.OPENAI_API_KEY, // optional API key, default to env property OPENAI_API_KEY
@@ -166,6 +176,29 @@ async function tavilySearch(
 ): Promise<any> {
   const apiKey = process.env.TAVILY_API_KEY
   const apiBase = process.env.TAVILY_API_BASE || 'https://api.tavily.com/search'
+  console.log(
+    '----------- process.env.TAVILY_API_KEY: ',
+    process.env.TAVILY_API_KEY,
+    ' -----------'
+  )
+  console.log(
+    '----------- process.env.TAVILY_API_BASE: ',
+    process.env.TAVILY_API_BASE,
+    ' -----------'
+  )
+  console.log('----------- tavily_fetch_apiBase: ', apiBase, ' -----------')
+  console.log(
+    '----------- tavily_fetch_response_body: ',
+    {
+      api_key: apiKey,
+      query,
+      max_results: maxResults < 5 ? 5 : maxResults,
+      search_depth: searchDepth,
+      include_images: true,
+      include_answers: true
+    },
+    ' -----------'
+  )
   const response = await fetch(apiBase, {
     method: 'POST',
     headers: {
@@ -182,6 +215,7 @@ async function tavilySearch(
   })
 
   if (!response.ok) {
+    console.log('----------- !response.ok: ', response, ' -----------')
     throw new Error(`Error: ${response.status}`)
   }
 

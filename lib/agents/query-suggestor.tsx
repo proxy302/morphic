@@ -9,6 +9,16 @@ export async function querySuggestor(
   uiStream: ReturnType<typeof createStreamableUI>,
   messages: ExperimentalMessage[]
 ) {
+  console.log(
+    '----------- process.env.OPENAI_API_BASE: ',
+    process.env.OPENAI_API_BASE,
+    ' -----------'
+  )
+  console.log(
+    '----------- process.env.OPENAI_API_KEY: ',
+    process.env.OPENAI_API_KEY,
+    ' -----------'
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: process.env.OPENAI_API_KEY, // optional API key, default to env property OPENAI_API_KEY
