@@ -1,21 +1,102 @@
 import { useEffect, useState, useRef } from 'react'
 import type { AI } from '@/app/action'
 import { useUIState, useActions, useAIState } from 'ai/rsc'
-import { cn } from '@/lib/utils'
+import { cn, getLocalStorage, setLocalStorage } from '@/lib/utils'
 import { UserMessage } from './user-message'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { ArrowRight, Plus, Square } from 'lucide-react'
 import { EmptyScreen } from './empty-screen'
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks'
+import { selectGlobal, setGlobalState } from '@/lib/store/globalSlice'
+import { useRouter } from 'next/navigation'
 
 export function ChatPanel() {
+  const router = useRouter()
+  const global = useAppSelector(selectGlobal)
+  const dispatch = useAppDispatch()
+  // api_key
+  useEffect(() => {
+    if (!global.api_key) {
+      const urlCode = new URLSearchParams(window.location.search).get('pwd')
+      const storageCode = getLocalStorage(window, 'code')
+      if (urlCode) login(urlCode)
+      else login(undefined, storageCode)
+    }
+  }, [])
+
+  async function login(code?: string, twiceCode?: string) {
+    const hostname = window.location.host.split('.')[0]
+    const response = await fetch(
+      `https://test-api2.proxy302.com/bot/v1/${hostname}${
+        code ? '?pwd=' + code : ''
+      }`
+    )
+    // const response = await fetch(
+    //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
+    // )
+    if (response.status === 200) {
+      const data = JSON.parse(await response.text())
+      if (data.code === 0) {
+        code &&
+          setLocalStorage(window, {
+            code
+          })
+        saveGlobal(data.data)
+        router.push('/')
+      } else {
+        if (twiceCode) {
+          const response = await fetch(
+            `https://test-api2.proxy302.com/bot/v1/${hostname}?pwd=${twiceCode}`
+          )
+          // const response = await fetch(
+          //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
+          // )
+          if (response.status === 200) {
+            const data = JSON.parse(await response.text())
+            if (data.code === 0) {
+              saveGlobal(data.data)
+              router.push('/')
+            } else router.push('/auth')
+          } else router.push('/auth')
+        } else router.push('/auth')
+      }
+    } else router.push('/auth')
+  }
+
+  function saveGlobal(data: {
+    api_key: string
+    created_by: string
+    current_date_cost: number
+    limit_daily_cost: number
+    model_name: string
+  }) {
+    // 保存数据
+    const {
+      api_key,
+      created_by,
+      current_date_cost,
+      limit_daily_cost,
+      model_name
+    } = data
+    dispatch(
+      setGlobalState({
+        api_key,
+        created_by,
+        current_date_cost,
+        limit_daily_cost,
+        model_name
+      })
+    )
+  }
+
   const [input, setInput] = useState('')
   const [messages, setMessages] = useUIState<typeof AI>()
   const [aiMessages, setAiMessages] = useAIState<typeof AI>()
   const { submit } = useActions<typeof AI>()
   const [isButtonPressed, setIsButtonPressed] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
-  const [showEmptyScreen, setShowEmptyScreen] = useState(false)
+  const [showEmptyScreen, setShowEmptyScreen] = useState(true)
   // Focus on input when button is pressed
   useEffect(() => {
     if (isButtonPressed) {
@@ -45,6 +126,7 @@ export function ChatPanel() {
 
     // Submit and get response message
     const formData = new FormData(e.currentTarget)
+    formData.append('api_key', global.api_key)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [...currentMessages, responseMessage as any])
 
@@ -88,7 +170,11 @@ export function ChatPanel() {
       ? 'fixed bottom-8 left-0 right-0 top-10 mx-auto h-screen flex flex-col items-center justify-center'
       : 'fixed bottom-8-ml-6'
   return (
-    <div className={formPositionClass}>
+    <div className={formPositionClass} style={{ top: '0' }}>
+      <div className="flex items-center gap-2 mb-7">
+        <img src="/logo.png" alt="ai-302" width={40} />
+        <div className="font-medium text-2xl md:text-3xl">AI搜索大师2.0</div>
+      </div>
       {/* <IconKuroko className="w-6 h-6 mb-4" /> */}
       <form onSubmit={handleSubmit} className="max-w-2xl w-full px-6">
         <div className="relative flex items-center w-full">
@@ -96,15 +182,12 @@ export function ChatPanel() {
             ref={inputRef}
             type="text"
             name="input"
-            placeholder="Ask a question..."
+            placeholder="随意向AI提问..."
             value={input}
             className="pl-4 pr-10 h-12 rounded-full bg-muted"
             onChange={e => {
               setInput(e.target.value)
-              setShowEmptyScreen(e.target.value.length === 0)
             }}
-            onFocus={() => setShowEmptyScreen(true)}
-            onBlur={() => setShowEmptyScreen(false)}
           />
           <Button
             type="submit"
@@ -123,6 +206,19 @@ export function ChatPanel() {
           className={cn(showEmptyScreen ? 'visible' : 'invisible')}
         />
       </form>
+      <a
+        className="flex items-center gap-1"
+        target="_blank"
+        href="https://302.ai/"
+      >
+        <span className="text-xs">Powered By</span>
+        <img
+          className="object-contain"
+          src="/logo-horizontal-dark.png"
+          alt="ai-302"
+          width={60}
+        />
+      </a>
     </div>
   )
 }

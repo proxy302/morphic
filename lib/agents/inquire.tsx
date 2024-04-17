@@ -3,29 +3,17 @@ import { Copilot } from '@/components/copilot'
 import { createStreamableUI, createStreamableValue } from 'ai/rsc'
 import { ExperimentalMessage, experimental_streamObject } from 'ai'
 import { PartialInquiry, inquirySchema } from '@/lib/schema/inquiry'
+import { useAppSelector } from '../store/hooks'
+import { selectGlobal } from '../store/globalSlice'
 
 export async function inquire(
   uiStream: ReturnType<typeof createStreamableUI>,
-  messages: ExperimentalMessage[]
+  messages: ExperimentalMessage[],
+  api_key: string
 ) {
-  console.log(
-    '----------- process.env.OPENAI_API_BASE: ',
-    process.env.OPENAI_API_BASE,
-    ' -----------'
-  )
-  console.log(
-    '----------- process.env.OPENAI_API_BASE: ',
-    process.env.OPENAI_API_BASE,
-    ' -----------'
-  )
-  console.log(
-    '----------- process.env.OPENAI_API_KEY: ',
-    process.env.OPENAI_API_KEY,
-    ' -----------'
-  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
-    apiKey: process.env.OPENAI_API_KEY, // optional API key, default to env property OPENAI_API_KEY
+    apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
     organization: '' // optional organization
   })
   const objectStream = createStreamableValue<PartialInquiry>()

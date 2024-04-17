@@ -4,31 +4,23 @@ import { AI } from './action'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/theme-provider'
-import Header from '@/components/header'
-import Footer from '@/components/footer'
+import { GlobalProvider } from '@/components/global-provider'
 
 const fontSans = FontSans({
   subsets: ['latin'],
   variable: '--font-sans'
 })
 
-const title = 'Morphic'
-const description =
-  'A fully open-source AI-powered answer engine with a generative UI.'
+const title = 'AI搜索大师2.0'
+const description = '通过AI搜索2.0，节省查找的时间'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://morphic.sh'),
+  metadataBase: new URL('https://302.ai/'),
   title,
   description,
   openGraph: {
     title,
     description
-  },
-  twitter: {
-    title,
-    description,
-    card: 'summary_large_image',
-    creator: '@miiura'
   }
 }
 
@@ -53,9 +45,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <AI>{children}</AI>
-          <Footer />
+          <GlobalProvider>
+            <AI>{children}</AI>
+          </GlobalProvider>
         </ThemeProvider>
       </body>
     </html>

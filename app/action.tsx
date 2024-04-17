@@ -14,6 +14,8 @@ import { inquire, researcher, taskManager, querySuggestor } from '@/lib/agents'
 async function submit(formData?: FormData, skip?: boolean) {
   'use server'
 
+  const api_key = (formData?.get('api_key') || '').toString()
+
   const aiState = getMutableAIState<typeof AI>()
   const uiStream = createStreamableUI()
   const isGenerating = createStreamableValue(true)
@@ -40,11 +42,11 @@ async function submit(formData?: FormData, skip?: boolean) {
 
     let action: any = { object: { next: 'proceed' } }
     // If the user skips the task, we proceed to the search
-    if (!skip) action = (await taskManager(messages)) ?? action
+    if (!skip) action = (await taskManager(messages, api_key)) ?? action
 
     if (action.object.next === 'inquire') {
       // Generate inquiry
-      const inquiry = await inquire(uiStream, messages)
+      const inquiry = await inquire(uiStream, messages, api_key)
 
       uiStream.done()
       isGenerating.done()
@@ -64,7 +66,8 @@ async function submit(formData?: FormData, skip?: boolean) {
       const { fullResponse, hasError } = await researcher(
         uiStream,
         streamText,
-        messages
+        messages,
+        api_key
       )
       answer = fullResponse
       errorOccurred = hasError
@@ -73,7 +76,7 @@ async function submit(formData?: FormData, skip?: boolean) {
 
     if (!errorOccurred) {
       // Generate related queries
-      await querySuggestor(uiStream, messages)
+      await querySuggestor(uiStream, messages, api_key)
 
       // Add follow-up panel
       uiStream.append(

@@ -74,3 +74,25 @@
     @apply bg-background text-foreground;
   }
 }
+
+.share-code-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 2.15rem;
+  bottom: 2.5rem;
+  left: 11%;
+  right: 11%;
+  padding: 1.25rem 2.25rem;
+  box-shadow: 50px 50px 100px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 20px;
+  border: 1px solid #dedede;
+}
+.share-code {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}

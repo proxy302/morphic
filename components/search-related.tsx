@@ -39,6 +39,7 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       component: <UserMessage message={query} isFirstMessage={false} />
     }
 
+    console.log('formData: ', formData)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,

@@ -48,6 +48,13 @@ export const Section: React.FC<SectionProps> = ({
     default:
       icon = <Search size={18} className="mr-2" />
   }
+  const title2Chinese: { [key: string]: string } = {
+    Images: '图片',
+    Sources: '来源',
+    Answer: '结论',
+    Related: '相关问题',
+    'Follow-up': '继续提问'
+  }
 
   return (
     <>
@@ -61,7 +68,7 @@ export const Section: React.FC<SectionProps> = ({
         {title && (
           <h2 className="flex items-center text-lg leading-none py-2">
             {icon}
-            {title}
+            {title2Chinese[title]}
           </h2>
         )}
         {children}
