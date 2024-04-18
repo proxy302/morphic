@@ -9,7 +9,7 @@ import {
   Repeat2,
   Search
 } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Separator } from './ui/separator'
 
 type SectionProps = {
@@ -27,6 +27,11 @@ export const Section: React.FC<SectionProps> = ({
   title,
   separator = false
 }) => {
+  const [language, setLanguage] = useState('zh')
+  useEffect(() => {
+    setLanguage(navigator.language)
+  }, [])
+
   let icon: React.ReactNode
   switch (title) {
     case 'Images':
@@ -68,7 +73,9 @@ export const Section: React.FC<SectionProps> = ({
         {title && (
           <h2 className="flex items-center text-lg leading-none py-2">
             {icon}
-            {title2Chinese[title]}
+            {language.toLocaleLowerCase().indexOf('zh') > -1
+              ? title2Chinese[title]
+              : title}
           </h2>
         )}
         {children}

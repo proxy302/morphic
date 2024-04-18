@@ -1,17 +1,25 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/app/action'
 import { UserMessage } from './user-message'
 import { ArrowRight } from 'lucide-react'
+import { useAppSelector } from '@/lib/store/hooks'
+import { selectGlobal } from '@/lib/store/globalSlice'
 
 export function FollowupPanel() {
   const [input, setInput] = useState('')
   const { submit } = useActions<typeof AI>()
   const [, setMessages] = useUIState<typeof AI>()
+  const [language, setLanguage] = useState('zh')
+  const global = useAppSelector(selectGlobal)
+
+  useEffect(() => {
+    setLanguage(navigator.language)
+  }, [])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -23,6 +31,7 @@ export function FollowupPanel() {
       component: <UserMessage message={input} isFirstMessage={false} />
     }
 
+    formData.append('api_key', global.api_key)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,
@@ -41,7 +50,11 @@ export function FollowupPanel() {
       <Input
         type="text"
         name="input"
-        placeholder="Ask a follow-up question..."
+        placeholder={
+          language.toLocaleLowerCase().indexOf('zh') > -1
+            ? '随意向AI提问...'
+            : 'Ask a Follow-up question'
+        }
         value={input}
         className="pr-14 h-12"
         onChange={e => setInput(e.target.value)}

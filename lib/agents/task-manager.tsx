@@ -31,7 +31,7 @@ export async function taskManager(
 
     return result
   } catch (error) {
-    console.error(error)
+    console.error('Task-Manager: ', error)
     return null
   }
 }

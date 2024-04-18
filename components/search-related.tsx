@@ -7,6 +7,8 @@ import { useActions, useStreamableValue, useUIState } from 'ai/rsc'
 import { AI } from '@/app/action'
 import { UserMessage } from './user-message'
 import { PartialRelated } from '@/lib/schema/related'
+import { useAppSelector } from '@/lib/store/hooks'
+import { selectGlobal } from '@/lib/store/globalSlice'
 
 export interface SearchRelatedProps {
   relatedQueries: PartialRelated
@@ -15,6 +17,7 @@ export interface SearchRelatedProps {
 export const SearchRelated: React.FC<SearchRelatedProps> = ({
   relatedQueries
 }) => {
+  const global = useAppSelector(selectGlobal)
   const { submit } = useActions<typeof AI>()
   const [, setMessages] = useUIState<typeof AI>()
   const [data, error, pending] =
@@ -39,7 +42,7 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       component: <UserMessage message={query} isFirstMessage={false} />
     }
 
-    console.log('formData: ', formData)
+    formData.append('api_key', global.api_key)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,

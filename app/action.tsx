@@ -11,10 +11,22 @@ import { Section } from '@/components/section'
 import { FollowupPanel } from '@/components/followup-panel'
 import { inquire, researcher, taskManager, querySuggestor } from '@/lib/agents'
 
-async function submit(formData?: FormData, skip?: boolean) {
+async function submit(formData: FormData, skip?: boolean) {
   'use server'
 
-  const api_key = (formData?.get('api_key') || '').toString()
+  const chineseStr = /[\u4e00-\u9fff]/
+  const query2Chinese = (key: string) => {
+    let query = formData.get(key)
+    if (query && chineseStr.test(query.toString())) {
+      formData.delete(key)
+      formData.append(key, query + '，请搜索内容全部用中文')
+    }
+  }
+  query2Chinese('input')
+  query2Chinese('related_query')
+  query2Chinese('additional_query')
+
+  const api_key = (formData.get('api_key') || '').toString()
 
   const aiState = getMutableAIState<typeof AI>()
   const uiStream = createStreamableUI()

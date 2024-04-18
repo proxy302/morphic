@@ -40,6 +40,11 @@ export default function Auth() {
       }`
     )
     // const response = await fetch(
+    //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic${
+    //     code ? '?pwd=' + code : ''
+    //   }`
+    // )
+    // const response = await fetch(
     //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
     // )
     if (response.status === 200) {

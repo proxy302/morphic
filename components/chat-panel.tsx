@@ -15,8 +15,10 @@ export function ChatPanel() {
   const router = useRouter()
   const global = useAppSelector(selectGlobal)
   const dispatch = useAppDispatch()
+  const [language, setLanguage] = useState('zh')
   // api_key
   useEffect(() => {
+    setLanguage(navigator.language)
     if (!global.api_key) {
       const urlCode = new URLSearchParams(window.location.search).get('pwd')
       const storageCode = getLocalStorage(window, 'code')
@@ -32,6 +34,11 @@ export function ChatPanel() {
         code ? '?pwd=' + code : ''
       }`
     )
+    // const response = await fetch(
+    //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic${
+    //     code ? '?pwd=' + code : ''
+    //   }`
+    // )
     // const response = await fetch(
     //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
     // )
@@ -49,6 +56,9 @@ export function ChatPanel() {
           const response = await fetch(
             `https://test-api2.proxy302.com/bot/v1/${hostname}?pwd=${twiceCode}`
           )
+          // const response = await fetch(
+          //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic?pwd=${twiceCode}`
+          // )
           // const response = await fetch(
           //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
           // )
@@ -120,7 +130,7 @@ export function ChatPanel() {
       {
         id: Date.now(),
         isGenerating: false,
-        component: <UserMessage message={input} />
+        component: <UserMessage message={input} isFirstMessage={true} />
       }
     ])
 
@@ -182,7 +192,11 @@ export function ChatPanel() {
             ref={inputRef}
             type="text"
             name="input"
-            placeholder="随意向AI提问..."
+            placeholder={
+              language.toLocaleLowerCase().indexOf('zh') > -1
+                ? '随意向AI提问...'
+                : 'Ask a question'
+            }
             value={input}
             className="pl-4 pr-10 h-12 rounded-full bg-muted"
             onChange={e => {
