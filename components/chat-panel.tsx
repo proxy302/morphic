@@ -34,12 +34,10 @@ export function ChatPanel({
   async function login(code?: string, twiceCode?: string) {
     const hostname = window.location.host.split('.')[0]
     const response = await fetch(
-      `https://test-api2.proxy302.com/bot/v1/${hostname}${
-        code ? '?pwd=' + code : ''
-      }`
+      `https://test-api2.302.ai/bot/v1/${hostname}${code ? '?pwd=' + code : ''}`
     )
     // const response = await fetch(
-    //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic${
+    //   `https://test-api2.302.ai/bot/v1/sqdq-morphic${
     //     code ? '?pwd=' + code : ''
     //   }`
     // )
@@ -58,10 +56,10 @@ export function ChatPanel({
       } else {
         if (twiceCode) {
           const response = await fetch(
-            `https://test-api2.proxy302.com/bot/v1/${hostname}?pwd=${twiceCode}`
+            `https://test-api2.302.ai/bot/v1/${hostname}?pwd=${twiceCode}`
           )
           // const response = await fetch(
-          //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic?pwd=${twiceCode}`
+          //   `https://test-api2.302.ai/bot/v1/sqdq-morphic?pwd=${twiceCode}`
           // )
           if (response.status === 200) {
             const data = JSON.parse(await response.text())

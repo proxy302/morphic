@@ -3,8 +3,6 @@ import { Copilot } from '@/components/copilot'
 import { createStreamableUI, createStreamableValue } from 'ai/rsc'
 import { ExperimentalMessage, experimental_streamObject } from 'ai'
 import { PartialInquiry, inquirySchema } from '@/lib/schema/inquiry'
-import { useAppSelector } from '../store/hooks'
-import { selectGlobal } from '../store/globalSlice'
 
 export async function inquire(
   uiStream: ReturnType<typeof createStreamableUI>,

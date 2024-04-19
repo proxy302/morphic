@@ -17,7 +17,6 @@ export default function Auth() {
   const [remCode, setRemCode] = useState(true)
 
   const dispatch = useAppDispatch()
-  const global = useAppSelector(selectGlobal)
 
   useEffect(() => {
     const urlCode = new URLSearchParams(window.location.search).get('pwd')
@@ -35,12 +34,10 @@ export default function Auth() {
   const login = async (code?: string) => {
     const hostname = window.location.host.split('.')[0]
     const response = await fetch(
-      `https://test-api2.proxy302.com/bot/v1/${hostname}${
-        code ? '?pwd=' + code : ''
-      }`
+      `https://test-api2.302.ai/bot/v1/${hostname}${code ? '?pwd=' + code : ''}`
     )
     // const response = await fetch(
-    //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic${
+    //   `https://test-api2.302.ai/bot/v1/sqdq-morphic${
     //     code ? '?pwd=' + code : ''
     //   }`
     // )
