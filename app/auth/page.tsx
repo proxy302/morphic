@@ -44,9 +44,6 @@ export default function Auth() {
     //     code ? '?pwd=' + code : ''
     //   }`
     // )
-    // const response = await fetch(
-    //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
-    // )
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
       if (data.code === 0) {
@@ -57,20 +54,10 @@ export default function Auth() {
             code
           })
         // 保存数据
-        const {
-          api_key,
-          created_by,
-          current_date_cost,
-          limit_daily_cost,
-          model_name
-        } = data.data
         dispatch(
           setGlobalState({
-            api_key,
-            created_by,
-            current_date_cost,
-            limit_daily_cost,
-            model_name
+            ...data.data,
+            code
           })
         )
         router.push('/')

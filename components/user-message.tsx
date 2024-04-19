@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
   Dialog,
@@ -21,6 +21,21 @@ export const UserMessage: React.FC<UserMessageProps> = ({
   isFirstMessage
 }) => {
   const global = useAppSelector(selectGlobal)
+  const [info, setInfo] = useState('')
+  const getInfo = async () => {
+    const code = global.code
+    const language = window.navigator.language
+    const hostname = window.location.host.split('.')[0]
+    const url = new URL(`https://test-api2.proxy302.com/bot/v1/${hostname}`)
+    const params = new URLSearchParams(url.searchParams)
+    code && params.append('pwd', code)
+    language.toLocaleLowerCase().indexOf('zh') > -1 &&
+      params.append('is_zh', 'true')
+    url.search = params.toString()
+    const response = await fetch(url)
+    const data = JSON.parse(await response.text())
+    setInfo(data.data.info)
+  }
 
   return (
     <div
@@ -66,6 +81,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
               height="16"
               fill="currentColor"
               aria-hidden="true"
+              onClick={getInfo}
             >
               <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"></path>
               <path d="M623.6 316.7C593.6 290.4 554 276 512 276s-81.6 14.5-111.6 40.7C369.2 344 352 380.7 352 420v7.6c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V420c0-44.1 43.1-80 96-80s96 35.9 96 80c0 31.1-22 59.6-56.1 72.7-21.2 8.1-39.2 22.3-52.1 40.9-13.1 19-19.9 41.8-19.9 64.9V620c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8v-22.7a48.3 48.3 0 0130.9-44.8c59-22.7 97.1-74.7 97.1-132.5.1-39.3-17.1-76-48.3-103.3zM472 732a40 40 0 1080 0 40 40 0 10-80 0z"></path>
@@ -74,32 +90,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
           <DialogPortal>
             <DialogContent>
               <DialogTitle>关于 AI搜索大师2.0</DialogTitle>
-              <p>
-                1. 本翻译工具由302.AI用户 <b>{global.created_by}</b>{' '}
-                创建,302.AI是一个AI生成和分享的平台，可以一键生成自己的AI工具
-              </p>
-              <p>
-                2. 此调研工具使用的模型是 <b>gpt-4-turbo</b>
-              </p>
-              <p>
-                3. 此调研工具单日限额 <b>{global.limit_daily_cost}</b>{' '}
-                PTC，已使用 <b>{global.current_date_cost}</b> PTC
-              </p>
-              <p>
-                4.
-                本工具的查询记录均保存在本机，不会被上传，生成此工具的用户无法看到你的查询记录
-              </p>
-              <p>
-                5. 更多信息请访问：
-                <a
-                  target="_blank"
-                  href="https://302.ai/"
-                  className="underline"
-                  style={{ color: 'rgb(0, 112, 240)' }}
-                >
-                  302.AI
-                </a>
-              </p>
+              <div dangerouslySetInnerHTML={{ __html: info }}></div>
             </DialogContent>
           </DialogPortal>
         </Dialog>

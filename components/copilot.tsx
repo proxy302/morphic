@@ -28,6 +28,7 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
   }>({})
   const [isButtonDisabled, setIsButtonDisabled] = useState(true)
   const [messages, setMessages] = useUIState<typeof AI>()
+  const [language, setLanguage] = useState('zh')
   const { submit } = useActions<typeof AI>()
   const global = useAppSelector(selectGlobal)
 
@@ -63,6 +64,10 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
     checkIfButtonShouldBeEnabled()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
+
+  useEffect(() => {
+    setLanguage(window.navigator.language)
+  }, [])
 
   const onFormSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
@@ -171,11 +176,15 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
               disabled={pending}
             >
               <FastForward size={16} className="mr-1" />
-              Skip
+              {language.toLocaleLowerCase().indexOf('zh') > -1
+                ? '跳过'
+                : 'Skip'}
             </Button>
             <Button type="submit" disabled={isButtonDisabled || pending}>
               <ArrowRight size={16} className="mr-1" />
-              Send
+              {language.toLocaleLowerCase().indexOf('zh') > -1
+                ? '搜索'
+                : 'Send'}
             </Button>
           </div>
         </form>

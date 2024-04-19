@@ -96,3 +96,11 @@
   transform: translate(-50%, -50%);
   text-align: center;
 }
+
+body {
+  background-image: url('/bg.svg');
+}
+.app-desc-content {
+  list-style: decimal;
+  margin-left: 24px;
+}

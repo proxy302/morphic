@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Dispatch, SetStateAction } from 'react'
 import type { AI } from '@/app/action'
 import { useUIState, useActions, useAIState } from 'ai/rsc'
 import { cn, getLocalStorage, setLocalStorage } from '@/lib/utils'
@@ -11,7 +11,11 @@ import { useAppDispatch, useAppSelector } from '@/lib/store/hooks'
 import { selectGlobal, setGlobalState } from '@/lib/store/globalSlice'
 import { useRouter } from 'next/navigation'
 
-export function ChatPanel() {
+export function ChatPanel({
+  handleSetAnswering
+}: {
+  handleSetAnswering: (flag: boolean) => void
+}) {
   const router = useRouter()
   const global = useAppSelector(selectGlobal)
   const dispatch = useAppDispatch()
@@ -39,9 +43,6 @@ export function ChatPanel() {
     //     code ? '?pwd=' + code : ''
     //   }`
     // )
-    // const response = await fetch(
-    //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
-    // )
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
       if (data.code === 0) {
@@ -49,7 +50,10 @@ export function ChatPanel() {
           setLocalStorage(window, {
             code
           })
-        saveGlobal(data.data)
+        saveGlobal({
+          ...data.data,
+          code
+        })
         router.push('/')
       } else {
         if (twiceCode) {
@@ -59,13 +63,13 @@ export function ChatPanel() {
           // const response = await fetch(
           //   `https://test-api2.proxy302.com/bot/v1/sqdq-morphic?pwd=${twiceCode}`
           // )
-          // const response = await fetch(
-          //   `https://dash-api.gpt302.com/bot/v1/jerrymoo-search?pwd=A6fa`
-          // )
           if (response.status === 200) {
             const data = JSON.parse(await response.text())
             if (data.code === 0) {
-              saveGlobal(data.data)
+              saveGlobal({
+                ...data.data,
+                code: twiceCode
+              })
               router.push('/')
             } else router.push('/auth')
           } else router.push('/auth')
@@ -74,30 +78,9 @@ export function ChatPanel() {
     } else router.push('/auth')
   }
 
-  function saveGlobal(data: {
-    api_key: string
-    created_by: string
-    current_date_cost: number
-    limit_daily_cost: number
-    model_name: string
-  }) {
+  function saveGlobal(data: { api_key: string; info: string }) {
     // 保存数据
-    const {
-      api_key,
-      created_by,
-      current_date_cost,
-      limit_daily_cost,
-      model_name
-    } = data
-    dispatch(
-      setGlobalState({
-        api_key,
-        created_by,
-        current_date_cost,
-        limit_daily_cost,
-        model_name
-      })
-    )
+    dispatch(setGlobalState(data))
   }
 
   const [input, setInput] = useState('')
@@ -155,23 +138,28 @@ export function ChatPanel() {
     inputRef.current?.focus()
   }, [])
 
+  useEffect(() => {
+    handleSetAnswering(Boolean(messages.length))
+  }, [messages])
+
   // If there are messages and the new button has not been pressed, display the new Button
   if (messages.length > 0 && !isButtonPressed) {
-    return (
-      <div className="fixed bottom-2 md:bottom-8 left-0 right-0 flex justify-center items-center mx-auto">
-        <Button
-          type="button"
-          variant={'secondary'}
-          className="rounded-full bg-secondary/80 group transition-all hover:scale-105"
-          onClick={() => handleClear()}
-        >
-          <span className="text-sm mr-2 group-hover:block hidden animate-in fade-in duration-300">
-            New
-          </span>
-          <Plus size={18} className="group-hover:rotate-90 transition-all" />
-        </Button>
-      </div>
-    )
+    return <></>
+    // return (
+    //   <div className="fixed bottom-2 md:bottom-8 left-0 right-0 flex justify-center items-center mx-auto">
+    //     <Button
+    //       type="button"
+    //       variant={'secondary'}
+    //       className="rounded-full bg-secondary/80 group transition-all hover:scale-105"
+    //       onClick={() => handleClear()}
+    //     >
+    //       <span className="text-sm mr-2 group-hover:block hidden animate-in fade-in duration-300">
+    //         New
+    //       </span>
+    //       <Plus size={18} className="group-hover:rotate-90 transition-all" />
+    //     </Button>
+    //   </div>
+    // )
   }
 
   // Condition 1 and 3: If there are no messages or the button is pressed, display the form
