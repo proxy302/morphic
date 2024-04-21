@@ -104,3 +104,31 @@ body {
   list-style: decimal;
   margin-left: 24px;
 }
+
+.desktop-boxShadow {
+  box-shadow: rgba(212, 212, 216, 0.2) 0px 0px 0px 8px;
+}
+
+.warning-message {
+  border: 1px solid #ffe58f;
+  background-color: #fffbe6;
+  border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+  .share-code-container {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+  }
+
+  .share-code {
+    width: 80%;
+  }
+
+  .desktop-boxShadow {
+    box-shadow: none;
+  }
+}

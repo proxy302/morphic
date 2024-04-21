@@ -20,7 +20,8 @@ export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,
   streamText: ReturnType<typeof createStreamableValue<string>>,
   messages: ExperimentalMessage[],
-  api_key: string
+  api_key: string,
+  model_name: string
 ) {
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
@@ -39,7 +40,7 @@ export async function researcher(
   )
 
   const result = await experimental_streamText({
-    model: openai.chat(process.env.OPENAI_API_MODEL || 'gpt-4-turbo'),
+    model: openai.chat(model_name || 'gpt-4-turbo'),
     maxTokens: 2500,
     system: `As a professional search expert, you possess the ability to search for any information on the web. 
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.

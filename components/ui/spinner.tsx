@@ -5,6 +5,7 @@ import { IconLogo } from './icons'
 
 export const Spinner = () => (
   <svg
+    id="searching-spinning"
     fill="none"
     stroke="currentColor"
     strokeWidth="1.5"

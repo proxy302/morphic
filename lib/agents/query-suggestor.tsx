@@ -8,7 +8,8 @@ import { OpenAI } from '@ai-sdk/openai'
 export async function querySuggestor(
   uiStream: ReturnType<typeof createStreamableUI>,
   messages: ExperimentalMessage[],
-  api_key: string
+  api_key: string,
+  model_name: string
 ) {
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
@@ -23,7 +24,7 @@ export async function querySuggestor(
   )
 
   await experimental_streamObject({
-    model: openai.chat(process.env.OPENAI_API_MODEL || 'gpt-4-turbo'),
+    model: openai.chat(model_name || 'gpt-4-turbo'),
     system: `As a professional web researcher, your task is to generate a set of three queries that explore the subject matter more deeply, building upon the initial query and the information uncovered in its search results.
 
     For instance, if the original query was "Starship's third test flight key milestones", your output should follow this format:

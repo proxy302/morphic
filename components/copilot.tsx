@@ -10,7 +10,7 @@ import { ArrowRight, Check, FastForward, Sparkles } from 'lucide-react'
 import { useActions, useStreamableValue, useUIState } from 'ai/rsc'
 import { AI } from '@/app/action'
 import { IconLogo } from './ui/icons'
-import { cn } from '@/lib/utils'
+import { cn, getLocalStorage } from '@/lib/utils'
 import { useAppSelector } from '@/lib/store/hooks'
 import { selectGlobal } from '@/lib/store/globalSlice'
 
@@ -80,7 +80,14 @@ export const Copilot: React.FC<CopilotProps> = ({ inquiry }: CopilotProps) => {
     const formData = skip
       ? new FormData()
       : new FormData(e.target as HTMLFormElement)
-    formData?.append('api_key', global.api_key)
+    formData.append(
+      'api_key',
+      global.api_key || getLocalStorage(window, 'api_key')
+    )
+    formData.append(
+      'model_name',
+      global.model_name || getLocalStorage(window, 'model_name')
+    )
     const responseMessage = await submit(formData, skip)
     setMessages(currentMessages => [...currentMessages, responseMessage])
   }

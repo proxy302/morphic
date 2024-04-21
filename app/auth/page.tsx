@@ -50,6 +50,10 @@ export default function Auth() {
           setLocalStorage(window, {
             code
           })
+        setLocalStorage(window, {
+          api_key: data.data.api_key,
+          model_name: data.data.model_name
+        })
         // 保存数据
         dispatch(
           setGlobalState({
@@ -58,8 +62,8 @@ export default function Auth() {
           })
         )
         router.push('/')
-      } else if (data.code === -101) setErrMessage('调研工具已删除')
-      else if (data.code === -100) setErrMessage('调研工具已禁用')
+      } else if (data.code === -101) setErrMessage('搜索工具已删除')
+      else if (data.code === -100) setErrMessage('搜索工具已禁用')
       else if (data.code === -99) setErrMessage('分享码错误')
       else setErrMessage('未知错误')
     } else setErrMessage('网络错误')

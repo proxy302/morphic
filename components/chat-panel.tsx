@@ -48,6 +48,10 @@ export function ChatPanel({
           setLocalStorage(window, {
             code
           })
+        setLocalStorage(window, {
+          api_key: data.data.api_key,
+          model_name: data.data.model_name
+        })
         saveGlobal({
           ...data.data,
           code
@@ -67,6 +71,10 @@ export function ChatPanel({
               saveGlobal({
                 ...data.data,
                 code: twiceCode
+              })
+              setLocalStorage(window, {
+                api_key: data.data.api_key,
+                model_name: data.data.model_name
               })
               router.push('/')
             } else router.push('/auth')
@@ -117,7 +125,14 @@ export function ChatPanel({
 
     // Submit and get response message
     const formData = new FormData(e.currentTarget)
-    formData.append('api_key', global.api_key)
+    formData.append(
+      'api_key',
+      global.api_key || getLocalStorage(window, 'api_key')
+    )
+    formData.append(
+      'model_name',
+      global.model_name || getLocalStorage(window, 'model_name')
+    )
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [...currentMessages, responseMessage as any])
 

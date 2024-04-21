@@ -9,6 +9,7 @@ import { UserMessage } from './user-message'
 import { PartialRelated } from '@/lib/schema/related'
 import { useAppSelector } from '@/lib/store/hooks'
 import { selectGlobal } from '@/lib/store/globalSlice'
+import { getLocalStorage } from '@/lib/utils'
 
 export interface SearchRelatedProps {
   relatedQueries: PartialRelated
@@ -42,7 +43,14 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       component: <UserMessage message={query} isFirstMessage={false} />
     }
 
-    formData.append('api_key', global.api_key)
+    formData.append(
+      'api_key',
+      global.api_key || getLocalStorage(window, 'api_key')
+    )
+    formData.append(
+      'model_name',
+      global.model_name || getLocalStorage(window, 'model_name')
+    )
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,

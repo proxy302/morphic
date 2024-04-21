@@ -3,7 +3,7 @@ import { RootState } from '.'
 
 interface GlobalStateProps {
   api_key: string
-  info: string
+  model_name: string
   code: string
 }
 
@@ -11,7 +11,7 @@ export const globalStateSlice = createSlice({
   name: 'global',
   initialState: {
     api_key: '',
-    info: '',
+    model_name: '',
     code: ''
   },
   reducers: {
@@ -21,10 +21,10 @@ export const globalStateSlice = createSlice({
         [key in keyof GlobalStateProps]?: GlobalStateProps[key]
       }>
     ) => {
-      const { api_key, info, code } = action.payload
-      if (api_key) state.api_key = api_key
-      if (info !== undefined) state.info = info
+      const { api_key, code, model_name } = action.payload
+      if (api_key !== undefined) state.api_key = api_key
       if (code !== undefined) state.code = code
+      if (model_name !== undefined) state.model_name = model_name
     }
   }
 })
