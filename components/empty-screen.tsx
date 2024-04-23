@@ -3,16 +3,20 @@ import { ArrowRight } from 'lucide-react'
 
 const exampleMessages = [
   {
-    heading: '伊朗袭击以色列',
-    message: '伊朗袭击以色列'
+    heading: '斗鱼回应PDD停播超5个月',
+    message: '斗鱼回应PDD停播超5个月'
   },
   {
-    heading: '端午放假3天不调休',
-    message: '端午放假3天不调休'
+    heading: '深圳卫健委抖音',
+    message: '深圳卫健委抖音'
   },
   {
-    heading: '菲总统:军人南海丧命就请美军介入',
-    message: '菲总统:军人南海丧命就请美军介入'
+    heading: '淄博烧烤今年还很火，为什么？',
+    message: '淄博烧烤今年还很火，为什么？'
+  },
+  {
+    heading: '国旗上带有武器的，有哪些国家',
+    message: '国旗上带有武器的，有哪些国家'
   }
 ]
 export function EmptyScreen({
