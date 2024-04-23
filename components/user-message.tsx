@@ -26,8 +26,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
     const code = global.code
     const language = window.navigator.language
     const hostname = window.location.host.split('.')[0]
-    const url = new URL(`https://test-api2.302.ai/bot/v1/${hostname}`)
-    // const url = new URL(`https://test-api2.302.ai/bot/v1/sqdq-morphic`)
+    const url = new URL(`https://dash-api.302.ai/bot/v1/${hostname}`)
     const params = new URLSearchParams(url.searchParams)
     code && params.append('pwd', code)
     language.toLocaleLowerCase().indexOf('zh') > -1 &&
