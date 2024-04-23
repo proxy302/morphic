@@ -11,6 +11,11 @@ export async function querySuggestor(
   api_key: string,
   model_name: string
 ) {
+  console.log(
+    '======================> querySuggestor:api_key: ',
+    api_key,
+    ' <====================='
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -48,6 +53,11 @@ export async function querySuggestor(
       }
     })
     .finally(() => {
+      console.log(
+        '======================> querySuggestor:objectStream: ',
+        objectStream,
+        ' <====================='
+      )
       objectStream.done()
     })
 }

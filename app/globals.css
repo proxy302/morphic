@@ -105,6 +105,11 @@ body {
   margin-left: 24px;
 }
 
+.app-desc-content a {
+  text-decoration: underline;
+  color: #0070f0;
+}
+
 .desktop-boxShadow {
   box-shadow: rgba(212, 212, 216, 0.2) 0px 0px 0px 8px;
 }

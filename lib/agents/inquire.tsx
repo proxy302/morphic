@@ -10,6 +10,11 @@ export async function inquire(
   api_key: string,
   model_name: string
 ) {
+  console.log(
+    '======================> inquire:api_key: ',
+    api_key,
+    ' <====================='
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -67,8 +72,12 @@ export async function inquire(
       }
     })
     .finally(() => {
+      console.log(
+        '======================> inquire:objectStream: ',
+        objectStream,
+        ' <====================='
+      )
       objectStream.done()
     })
-
   return finalInquiry
 }

@@ -23,6 +23,11 @@ export async function researcher(
   api_key: string,
   model_name: string
 ) {
+  console.log(
+    '======================> researcher:api_key: ',
+    api_key,
+    ' <====================='
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -33,6 +38,7 @@ export async function researcher(
 
   let fullResponse = ''
   let hasError = false
+
   const answerSection = (
     <Section title="Answer">
       <BotMessage content={streamText.value} />
@@ -124,6 +130,12 @@ export async function researcher(
       }
     }
   })
+
+  console.log(
+    '======================> researcher:result: ',
+    result,
+    ' <====================='
+  )
 
   const toolCalls: ToolCallPart[] = []
   const toolResponses: ToolResultPart[] = []

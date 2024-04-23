@@ -51,6 +51,7 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       'model_name',
       global.model_name || getLocalStorage(window, 'model_name')
     )
+    formData.append('broswer_lang', navigator.language)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,

@@ -16,25 +16,25 @@ import { CircleAlert } from 'lucide-react'
 async function submit(formData: FormData, skip?: boolean) {
   'use server'
 
-  const chineseStr = /[\u4e00-\u9fff]/
-  const query2Chinese = (key: string) => {
-    let query = formData.get(key)
-    if (query && chineseStr.test(query.toString())) {
-      formData.delete(key)
-      formData.append(key, query + '，请搜索内容全部用中文')
+  const broswerLang = formData.get('broswer_lang')
+  if (
+    broswerLang &&
+    broswerLang.toString().toLocaleLowerCase().indexOf('zh') > -1
+  ) {
+    const query2Chinese = (key: string) => {
+      let query = formData.get(key)
+      if (query) {
+        formData.delete(key)
+        formData.append(key, query + '，请搜索内容全部用中文')
+      }
     }
+    query2Chinese('input')
+    query2Chinese('related_query')
+    query2Chinese('additional_query')
   }
-  query2Chinese('input')
-  query2Chinese('related_query')
-  query2Chinese('additional_query')
 
   const api_key = (formData.get('api_key') || '').toString()
   const model_name = (formData.get('model_name') || '').toString()
-  console.log(
-    '=========================> ',
-    model_name,
-    ' <========================='
-  )
 
   const aiState = getMutableAIState<typeof AI>()
   const uiStream = createStreamableUI()

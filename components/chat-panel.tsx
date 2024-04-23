@@ -133,6 +133,7 @@ export function ChatPanel({
       'model_name',
       global.model_name || getLocalStorage(window, 'model_name')
     )
+    formData.append('broswer_lang', navigator.language)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [...currentMessages, responseMessage as any])
 

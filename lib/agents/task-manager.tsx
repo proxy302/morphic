@@ -8,6 +8,11 @@ export async function taskManager(
   api_key: string,
   model_name: string
 ) {
+  console.log(
+    '======================> taskManager:api_key: ',
+    api_key,
+    ' <====================='
+  )
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -30,8 +35,19 @@ export async function taskManager(
       schema: nextActionSchema
     })
 
+    console.log(
+      '======================> taskManager:result: ',
+      result,
+      ' <====================='
+    )
+
     return result
   } catch (error) {
+    console.log(
+      '======================> taskManager:error: ',
+      error,
+      ' <====================='
+    )
     return {
       error
     }

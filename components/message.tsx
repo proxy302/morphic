@@ -14,7 +14,18 @@ export function BotMessage({
   if (error) return <div>Error</div>
 
   return (
-    <MemoizedReactMarkdown className="prose-sm prose-neutral prose-a:text-accent-foreground/50">
+    <MemoizedReactMarkdown
+      className="prose-sm prose-neutral prose-a:text-accent-foreground/50"
+      components={{
+        a: ({ href, children }) => {
+          return (
+            <a href={href} target="_blank">
+              {children}
+            </a>
+          )
+        }
+      }}
+    >
       {data}
     </MemoizedReactMarkdown>
   )
