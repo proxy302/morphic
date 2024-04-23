@@ -133,7 +133,6 @@ export function ChatPanel({
       'model_name',
       global.model_name || getLocalStorage(window, 'model_name')
     )
-    formData.append('broswer_lang', navigator.language)
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [...currentMessages, responseMessage as any])
 
@@ -158,22 +157,23 @@ export function ChatPanel({
 
   // If there are messages and the new button has not been pressed, display the new Button
   if (messages.length > 0 && !isButtonPressed) {
-    return <></>
-    // return (
-    //   <div className="fixed bottom-2 md:bottom-8 left-0 right-0 flex justify-center items-center mx-auto">
-    //     <Button
-    //       type="button"
-    //       variant={'secondary'}
-    //       className="rounded-full bg-secondary/80 group transition-all hover:scale-105"
-    //       onClick={() => handleClear()}
-    //     >
-    //       <span className="text-sm mr-2 group-hover:block hidden animate-in fade-in duration-300">
-    //         New
-    //       </span>
-    //       <Plus size={18} className="group-hover:rotate-90 transition-all" />
-    //     </Button>
-    //   </div>
-    // )
+    return (
+      <div className="fixed bottom-2 md:bottom-8 left-0 right-0 flex justify-center items-center mx-auto">
+        <Button
+          type="button"
+          variant={'secondary'}
+          className="rounded-full bg-secondary/80 group transition-all hover:scale-105"
+          onClick={() => handleClear()}
+        >
+          <span className="text-sm mr-2 group-hover:block hidden animate-in fade-in duration-300">
+            {language.toLocaleLowerCase().indexOf('zh') > -1
+              ? '再提问一个'
+              : 'New'}
+          </span>
+          <Plus size={18} className="group-hover:rotate-90 transition-all" />
+        </Button>
+      </div>
+    )
   }
 
   // Condition 1 and 3: If there are no messages or the button is pressed, display the form

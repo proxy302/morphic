@@ -16,22 +16,30 @@ import { CircleAlert } from 'lucide-react'
 async function submit(formData: FormData, skip?: boolean) {
   'use server'
 
-  const broswerLang = formData.get('broswer_lang')
-  if (
-    broswerLang &&
-    broswerLang.toString().toLocaleLowerCase().indexOf('zh') > -1
-  ) {
-    const query2Chinese = (key: string) => {
-      let query = formData.get(key)
-      if (query) {
-        formData.delete(key)
-        formData.append(key, query + '，请搜索内容全部用中文')
-      }
+  // if (language && language.toLocaleLowerCase().indexOf('zh') > -1) {
+  //   const query2Chinese = (key: string) => {
+  //     let query = formData.get(key)
+  //     if (query) {
+  //       formData.delete(key)
+  //       formData.append(key, query + '，请搜索内容全部用中文')
+  //     }
+  //   }
+  //   query2Chinese('input')
+  //   query2Chinese('related_query')
+  //   query2Chinese('additional_query')
+  // }
+
+  const chineseStr = /[\u4e00-\u9fff]/
+  const query2Chinese = (key: string) => {
+    let query = formData.get(key)
+    if (query && chineseStr.test(query.toString())) {
+      formData.delete(key)
+      formData.append(key, query + '，请搜索内容全部用中文')
     }
-    query2Chinese('input')
-    query2Chinese('related_query')
-    query2Chinese('additional_query')
   }
+  query2Chinese('input')
+  query2Chinese('related_query')
+  query2Chinese('additional_query')
 
   const api_key = (formData.get('api_key') || '').toString()
   const model_name = (formData.get('model_name') || '').toString()
@@ -158,14 +166,18 @@ async function submit(formData: FormData, skip?: boolean) {
 
     if (!errorOccurred) {
       // Generate related queries
-      await querySuggestor(uiStream, messages, api_key, model_name)
-
-      // Add follow-up panel
-      uiStream.append(
-        <Section title="Follow-up">
-          <FollowupPanel />
-        </Section>
-      )
+      try {
+        await querySuggestor(uiStream, messages, api_key, model_name)
+      } catch (e) {
+        uiStream.update(<></>)
+      } finally {
+        // Add follow-up panel
+        uiStream.append(
+          <Section title="Follow-up">
+            <FollowupPanel />
+          </Section>
+        )
+      }
     }
 
     isGenerating.done(false)
