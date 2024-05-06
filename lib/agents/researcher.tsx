@@ -41,7 +41,7 @@ export async function researcher(
   )
 
   const result = await experimental_streamText({
-    model: openai.chat(model_name || 'gpt-4-turbo'),
+    model: openai.chat(model_name || 'gpt-3.5-turbo-16k'),
     maxTokens: 2500,
     system: `As a professional search expert, you possess the ability to search for any information on the web. 
     For each user query, utilize the search results to their fullest potential to provide additional information and assistance in your response.

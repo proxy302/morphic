@@ -13,11 +13,13 @@ import { selectGlobal } from '@/lib/store/globalSlice'
 
 type UserMessageProps = {
   message: string
+  handleClear?: () => void
   isFirstMessage?: boolean
 }
 
 export const UserMessage: React.FC<UserMessageProps> = ({
   message,
+  handleClear,
   isFirstMessage
 }) => {
   const global = useAppSelector(selectGlobal)
@@ -46,7 +48,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
       <div className="flex items-center gap-2">
         {isFirstMessage && (
           <a
-            href="/"
+            onClick={() => handleClear && handleClear()}
             className="flex justify-center items-center cursor-pointer bg-zinc-100 rounded-full w-7 h-7"
           >
             <svg

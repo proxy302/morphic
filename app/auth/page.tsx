@@ -33,9 +33,9 @@ export default function Auth() {
   // 登录
   const login = async (code?: string) => {
     const hostname = window.location.host.split('.')[0]
-    const response = await fetch(
-      `https://dash-api.302.ai/bot/v1/${hostname}${code ? '?pwd=' + code : ''}`
-    )
+    const fetchUrl = `https://dash-api.302.ai/bot/v1/${hostname}`
+    // const fetchUrl = `https://dash-api.302.ai/bot/v1/8zff-morphic`
+    const response = await fetch(`${fetchUrl}${code ? '?pwd=' + code : ''}`)
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
       if (data.code === 0) {

@@ -1,24 +1,9 @@
 import { Button } from '@/components/ui/button'
+import { useAppSelector, useAppDispatch } from '@/lib/store/hooks'
+import { selectGlobal, setGlobalState } from '@/lib/store/globalSlice'
 import { ArrowRight } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
-const exampleMessages = [
-  {
-    heading: '斗鱼回应PDD停播超5个月',
-    message: '斗鱼回应PDD停播超5个月'
-  },
-  {
-    heading: '深圳卫健委抖音',
-    message: '深圳卫健委抖音'
-  },
-  {
-    heading: '淄博烧烤今年还很火，为什么？',
-    message: '淄博烧烤今年还很火，为什么？'
-  },
-  {
-    heading: '国旗上带有武器的，有哪些国家',
-    message: '国旗上带有武器的，有哪些国家'
-  }
-]
 export function EmptyScreen({
   submitMessage,
   className
@@ -26,6 +11,38 @@ export function EmptyScreen({
   submitMessage: (message: string) => void
   className?: string
 }) {
+  const global = useAppSelector(selectGlobal)
+  const dispatch = useAppDispatch()
+  const [exampleMessages, setExampleMessages] = useState<
+    {
+      heading: string
+      message: string
+    }[]
+  >(global.realtimehot)
+
+  const getRealtimeHot = async () => {
+    const res = await fetch(
+      'https://abcd-research.havethefeb.autos/realtimehot',
+      {
+        method: 'get'
+      }
+    )
+    const data = JSON.parse(await res.text()).realtimehot as {
+      url: string
+      title: string
+    }[]
+    const filterData = data
+      .filter(data => data.url.indexOf('weibo?q=') > -1)
+      .slice(0, 4)
+      .map(data => ({
+        heading: data.title,
+        message: data.title
+      }))
+    dispatch(setGlobalState({ realtimehot: filterData }))
+    setExampleMessages(filterData)
+  }
+  if (!exampleMessages.length) getRealtimeHot()
+
   return (
     <div className={`mx-auto w-full transition-all ${className}`}>
       <div className="p-2 bg-transparent">
