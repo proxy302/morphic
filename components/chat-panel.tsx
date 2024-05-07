@@ -33,14 +33,9 @@ export function ChatPanel({
 
   async function login(code?: string, twiceCode?: string) {
     const hostname = window.location.host.split('.')[0]
-    const response = await fetch(
-      `https://test-api2.302.ai/bot/v1/${hostname}${code ? '?pwd=' + code : ''}`
-    )
-    // const response = await fetch(
-    //   `https://test-api2.302.ai/bot/v1/sqdq-morphic${
-    //     code ? '?pwd=' + code : ''
-    //   }`
-    // )
+    const fetchUrl = `https://test-api2.302.ai/bot/v1/${hostname}`
+    // const fetchUrl = `https://test-api2.302.ai/bot/v1/gpck-morphic`
+    const response = await fetch(`${fetchUrl}${code ? '?pwd=' + code : ''}`)
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
       if (data.code === 0) {
@@ -59,12 +54,7 @@ export function ChatPanel({
         router.push('/')
       } else {
         if (twiceCode) {
-          const response = await fetch(
-            `https://test-api2.302.ai/bot/v1/${hostname}?pwd=${twiceCode}`
-          )
-          // const response = await fetch(
-          //   `https://test-api2.302.ai/bot/v1/sqdq-morphic?pwd=${twiceCode}`
-          // )
+          const response = await fetch(`${fetchUrl}?pwd=${twiceCode}`)
           if (response.status === 200) {
             const data = JSON.parse(await response.text())
             if (data.code === 0) {
@@ -119,7 +109,13 @@ export function ChatPanel({
       {
         id: Date.now(),
         isGenerating: false,
-        component: <UserMessage message={input} isFirstMessage={true} />
+        component: (
+          <UserMessage
+            message={input}
+            isFirstMessage={true}
+            handleClear={handleClear}
+          />
+        )
       }
     ])
 

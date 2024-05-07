@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { ArrowRight } from 'lucide-react'
 import { useActions, useStreamableValue, useUIState } from 'ai/rsc'
@@ -18,6 +18,7 @@ export interface SearchRelatedProps {
 export const SearchRelated: React.FC<SearchRelatedProps> = ({
   relatedQueries
 }) => {
+  const [lastQuery, setLastQuery] = useState('')
   const global = useAppSelector(selectGlobal)
   const { submit } = useActions<typeof AI>()
   const [, setMessages] = useUIState<typeof AI>()
@@ -51,6 +52,16 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       'model_name',
       global.model_name || getLocalStorage(window, 'model_name')
     )
+    // 2-3s内禁止重复问题
+    const related_query = formData.get('related_query')
+    if (related_query) {
+      if (lastQuery === related_query.toString()) return
+      setLastQuery(related_query.toString())
+      setTimeout(() => {
+        setLastQuery('')
+      }, 3000)
+    }
+
     const responseMessage = await submit(formData)
     setMessages(currentMessages => [
       ...currentMessages,

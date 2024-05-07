@@ -7,12 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 const morphic_data = 'morphic_data'
 
-export function setLocalStorage(
-  window: Window,
-  objects: {
-    [key: string]: string | number
-  }
-) {
+export function setLocalStorage(window: Window, objects: any) {
   if (window) {
     let existedData = JSON.parse(
       window.localStorage.getItem(morphic_data) || '{}'

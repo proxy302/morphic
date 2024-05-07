@@ -24,7 +24,7 @@ export async function querySuggestor(
   )
 
   await experimental_streamObject({
-    model: openai.chat(model_name || 'gpt-4-turbo'),
+    model: openai.chat(model_name || 'gpt-3.5-turbo-16k'),
     system: `As a professional web researcher, your task is to generate a set of three queries that explore the subject matter more deeply, building upon the initial query and the information uncovered in its search results.
 
     For instance, if the original query was "Starship's third test flight key milestones", your output should follow this format:

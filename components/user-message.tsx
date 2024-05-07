@@ -13,11 +13,13 @@ import { selectGlobal } from '@/lib/store/globalSlice'
 
 type UserMessageProps = {
   message: string
+  handleClear?: () => void
   isFirstMessage?: boolean
 }
 
 export const UserMessage: React.FC<UserMessageProps> = ({
   message,
+  handleClear,
   isFirstMessage
 }) => {
   const global = useAppSelector(selectGlobal)
@@ -27,7 +29,6 @@ export const UserMessage: React.FC<UserMessageProps> = ({
     const language = window.navigator.language
     const hostname = window.location.host.split('.')[0]
     const url = new URL(`https://test-api2.302.ai/bot/v1/${hostname}`)
-    // const url = new URL(`https://test-api2.302.ai/bot/v1/sqdq-morphic`)
     const params = new URLSearchParams(url.searchParams)
     code && params.append('pwd', code)
     language.toLocaleLowerCase().indexOf('zh') > -1 &&
@@ -47,7 +48,7 @@ export const UserMessage: React.FC<UserMessageProps> = ({
       <div className="flex items-center gap-2">
         {isFirstMessage && (
           <a
-            href="/"
+            onClick={() => handleClear && handleClear()}
             className="flex justify-center items-center cursor-pointer bg-zinc-100 rounded-full w-7 h-7"
           >
             <svg
