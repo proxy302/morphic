@@ -33,8 +33,8 @@ export function ChatPanel({
 
   async function login(code?: string, twiceCode?: string) {
     const hostname = window.location.host.split('.')[0]
-    const fetchUrl = `https://test-api2.302.ai/bot/v1/${hostname}`
-    // const fetchUrl = `https://test-api2.302.ai/bot/v1/gpck-morphic`
+    const fetchUrl = `https://test-api2.gpt302.com/bot/v1/${hostname}`
+    // const fetchUrl = `https://test-api2.gpt302.com/bot/v1/gpck-morphic`
     const response = await fetch(`${fetchUrl}${code ? '?pwd=' + code : ''}`)
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
