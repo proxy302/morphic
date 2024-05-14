@@ -23,6 +23,7 @@ export async function researcher(
   api_key: string,
   model_name: string
 ) {
+  console.log('=====================> researcher <=====================')
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -125,10 +126,13 @@ export async function researcher(
       }
     }
   })
-
   const toolCalls: ToolCallPart[] = []
   const toolResponses: ToolResultPart[] = []
   for await (const delta of result.fullStream) {
+    console.log(
+      '=====================> researcher:delta of result.fullStream: <====================='
+    )
+    console.log(delta)
     switch (delta.type) {
       case 'text-delta':
         if (delta.textDelta) {
@@ -137,7 +141,6 @@ export async function researcher(
             // Update the UI
             uiStream.update(answerSection)
           }
-
           fullResponse += delta.textDelta
           streamText.update(fullResponse)
         }
