@@ -12,7 +12,7 @@ export interface SearchResultsProps {
 
 export function SearchResults({ results }: SearchResultsProps) {
   // State to manage whether to display the results
-  const [showAllResults, setShowAllResults] = useState(false)
+  const [showAllResults, setShowAllResults] = useState(true)
 
   const handleViewMore = () => {
     setShowAllResults(true)

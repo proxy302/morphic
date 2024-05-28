@@ -41,7 +41,10 @@ export function EmptyScreen({
     dispatch(setGlobalState({ realtimehot: filterData }))
     setExampleMessages(filterData)
   }
-  if (!exampleMessages.length) getRealtimeHot()
+
+  useEffect(() => {
+    if (!exampleMessages.length) getRealtimeHot()
+  }, [])
 
   return (
     <div className={`mx-auto w-full transition-all ${className}`}>

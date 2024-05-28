@@ -15,6 +15,7 @@ import { BotMessage } from '@/components/message'
 import Exa from 'exa-js'
 import { SearchResultsImageSection } from '@/components/search-results-image'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 
 export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,
@@ -23,7 +24,6 @@ export async function researcher(
   api_key: string,
   model_name: string
 ) {
-  console.log('=====================> researcher <=====================')
   const openai = new OpenAI({
     baseUrl: process.env.OPENAI_API_BASE, // optional base URL for proxies etc.
     apiKey: api_key, // optional API key, default to env property OPENAI_API_KEY
@@ -120,6 +120,11 @@ export async function researcher(
           )
 
           uiStream.append(answerSection)
+          uiStream.update(
+            <Section title="Answer">
+              <Spinner />
+            </Section>
+          )
 
           return searchResult
         }
@@ -129,10 +134,10 @@ export async function researcher(
   const toolCalls: ToolCallPart[] = []
   const toolResponses: ToolResultPart[] = []
   for await (const delta of result.fullStream) {
-    console.log(
-      '=====================> researcher:delta of result.fullStream: <====================='
-    )
-    console.log(delta)
+    // console.log(
+    //   '=====================> researcher:delta of result.fullStream: <====================='
+    // )
+    // console.log(delta)
     switch (delta.type) {
       case 'text-delta':
         if (delta.textDelta) {

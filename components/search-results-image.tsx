@@ -33,6 +33,7 @@ export const SearchResultsImageSection: React.FC<
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [validImages, setValidImages] = useState<string[]>([])
 
   // Update the current and count state when the carousel api is available
   useEffect(() => {
@@ -55,13 +56,50 @@ export const SearchResultsImageSection: React.FC<
     }
   }, [api, selectedIndex])
 
+  useEffect(() => {}, [])
+
   if (!images || images.length === 0) {
     return <div className="text-muted-foreground">No images found</div>
   }
 
+  // if (!fetchImage) {
+  //   images.forEach(async (image: string) => {
+  //     if (gptImages.indexOf(image) > -1) return
+  //     const url = await getGptImageUrl(image)
+  //     setGptImages([...gptImages, url])
+  //   })
+  //   setFetchImage(true)
+  // }
+
+  async function getGptImageUrl(image: string) {
+    try {
+      const formData = new FormData()
+      formData.append('file', '')
+      formData.append('prefix', 'search_master_2')
+      formData.append('url', image)
+      const fetchRes = await fetch(
+        'https://dash-api.proxy302.com/gpt/api/upload/gpt/image',
+        {
+          method: 'post',
+          headers: {
+            accept: 'application/json'
+          },
+          body: formData
+        }
+      )
+      const strRes = await fetchRes.text()
+      const res = JSON.parse(strRes)
+      return res.data.url
+    } catch (e) {
+      return image
+    }
+  }
+
+  !validImages.length && setValidImages([...images])
+
   return (
     <div className="flex flex-wrap gap-2">
-      {images.slice(0, 4).map((image: any, index: number) => (
+      {validImages.map((image: any, index: number) => (
         <Dialog key={index}>
           <DialogTrigger asChild>
             <div
@@ -75,17 +113,25 @@ export const SearchResultsImageSection: React.FC<
                       src={image}
                       alt={`Image ${index + 1}`}
                       className="h-full w-full object-cover"
+                      onError={async () => {
+                        const newUrl = await getGptImageUrl(image)
+                        setValidImages(
+                          validImages.map(validImage =>
+                            validImage === image ? newUrl : validImage
+                          )
+                        )
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full bg-muted animate-pulse" />
                   )}
                 </CardContent>
               </Card>
-              {index === 3 && images.length > 4 && (
+              {/* {index === 3 && validImages.length > 4 && (
                 <div className="absolute inset-0 bg-black/30 rounded-md flex items-center justify-center text-white/80 text-sm">
                   <PlusCircle size={24} />
                 </div>
-              )}
+              )} */}
             </div>
           </DialogTrigger>
           <DialogContent className="sm:max-w-3xl max-h-[80vh] overflow-auto">
@@ -99,7 +145,7 @@ export const SearchResultsImageSection: React.FC<
                 className="w-full bg-muted max-h-[60vh]"
               >
                 <CarouselContent>
-                  {images.map((img, idx) => (
+                  {validImages.map((img, idx) => (
                     <CarouselItem key={idx}>
                       <div className="p-1 flex items-center justify-center h-full">
                         <img

@@ -34,7 +34,7 @@ export default function Auth() {
   const login = async (code?: string) => {
     const hostname = window.location.host.split('.')[0]
     const fetchUrl = `https://dash-api.302.ai/bot/v1/${hostname}`
-    // const fetchUrl = `https://dash-api.302.ai/bot/v1/8zff-morphic`
+    // const fetchUrl = `https://dash-api.302.ai/bot/v1/adz8-morphic`
     const response = await fetch(`${fetchUrl}${code ? '?pwd=' + code : ''}`)
     if (response.status === 200) {
       const data = JSON.parse(await response.text())
