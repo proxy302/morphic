@@ -21,6 +21,7 @@ export function EmptyScreen({
   >(global.realtimehot)
 
   const getRealtimeHot = async () => {
+    const language = window.navigator.language
     const res = await fetch(
       'https://abcd-research.havethefeb.autos/realtimehot',
       {
@@ -30,12 +31,18 @@ export function EmptyScreen({
     const data = JSON.parse(await res.text()).realtimehot as {
       url: string
       title: string
+      translate_title?: string
     }[]
     const filterData = data
       .filter(data => data.url.indexOf('weibo?q=') > -1)
       .slice(0, 4)
       .map(data => ({
-        heading: data.title,
+        heading:
+          language.indexOf('zh') > -1
+            ? data.title
+            : data.translate_title
+            ? data.translate_title
+            : data.title,
         message: data.title
       }))
     dispatch(setGlobalState({ realtimehot: filterData }))
